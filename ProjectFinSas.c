@@ -2,7 +2,7 @@
 #include <string.h>
 #include <time.h>
 
-int choix, count = 0, Id = 1, choix2, numAjo, walo, status, triPar, IdM, foundId = 0, foundIdD = 0, foundIdT = 0, comp = 0, incomp = 0;
+int choix, count = 0, Id = 1, choix2, numAjo, walo, status, triPar, IdM, foundId = 0, foundIdD = 0, foundIdT = 0, comp = 0, incomp = 0, localtime1, localtime2;
 char cherT[33];
 // choix  === hada howa l'tikhtar luser f lawel
 // count  === hada howa l'count dyal struct
@@ -271,21 +271,21 @@ void Afficher()
             int year = time_info->tm_year + 1900;
 
             // Print the current date
-            printf("Current date: %02d-%02d-%04d\n", day, month, year);
+            // printf("Current date: %02d-%02d-%04d\n", day, month, year);
 
-            // for (int i = 0; i < count; i++)
-            // {
-            //     if (taches[i].deadline.annee == year && taches[i].deadline.mois == month && taches[i].deadline.jour = day)
-            //     {
-            //         printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
-            //                taches[i].id,
-            //                taches[i].titre,
-            //                taches[i].description,
-            //                taches[i].status, taches[i].deadline.jour,
-            //                taches[i].deadline.mois, taches[i].deadline.annee);
-            //         printf("***********************************************************************************************************************************|\n");
-            //     }
-            // }
+            for (int i = 0; i < count; i++)
+            {
+                if ((taches[i].deadline.annee == year && taches[i].deadline.mois == month) && (taches[i].deadline.jour == day || taches[i].deadline.jour == day + 1 || taches[i].deadline.jour == day + 2))
+                {
+                    printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                           taches[i].id,
+                           taches[i].titre,
+                           taches[i].description,
+                           taches[i].status, taches[i].deadline.jour,
+                           taches[i].deadline.mois, taches[i].deadline.annee);
+                    printf("***********************************************************************************************************************************|\n");
+                }
+            }
         }
         else if (triPar == 0)
         {
@@ -539,6 +539,20 @@ void Statics()
         }
         else if (triPar == 3)
         {
+            time_t current_time;
+            struct tm *time_info;
+            char time_string[100];
+            time(&current_time);
+            time_info = localtime(&current_time);
+            int day = time_info->tm_mday;
+            int month = time_info->tm_mon + 1;
+            int year = time_info->tm_year + 1900;
+            localtime1 = year * 365 + month * 30 + day;
+            for (int i = 0; i < count; i++)
+            {
+                localtime2 = taches[i].deadline.annee * 365 + taches[i].deadline.mois * 30 + taches[i].deadline.jour;
+                printf("la tache numero %d il rest     ======     %d jour", Id, localtime2 - localtime1);
+            }
         }
         else if (triPar == 0)
         {
