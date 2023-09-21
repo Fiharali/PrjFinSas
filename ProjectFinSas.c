@@ -273,19 +273,19 @@ void Afficher()
             // Print the current date
             printf("Current date: %02d-%02d-%04d\n", day, month, year);
 
-            for (int i = 0; i < count; i++)
-            {
-                if (taches[i].deadline.annee == year && taches[i].deadline.mois == month && taches[i].deadline.jour = day)
-                {
-                    printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
-                           taches[i].id,
-                           taches[i].titre,
-                           taches[i].description,
-                           taches[i].status, taches[i].deadline.jour,
-                           taches[i].deadline.mois, taches[i].deadline.annee);
-                    printf("***********************************************************************************************************************************|\n");
-                }
-            }
+            // for (int i = 0; i < count; i++)
+            // {
+            //     if (taches[i].deadline.annee == year && taches[i].deadline.mois == month && taches[i].deadline.jour = day)
+            //     {
+            //         printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+            //                taches[i].id,
+            //                taches[i].titre,
+            //                taches[i].description,
+            //                taches[i].status, taches[i].deadline.jour,
+            //                taches[i].deadline.mois, taches[i].deadline.annee);
+            //         printf("***********************************************************************************************************************************|\n");
+            //     }
+            // }
         }
         else if (triPar == 0)
         {
