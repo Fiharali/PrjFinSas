@@ -2,10 +2,8 @@
 #include <string.h>
 #include <time.h>
 
-
-int choix, count = 0, Id = 1, choix2, numAjo, walo, status, triPar, khawi;
-char khawi1[33];
-
+int choix, count = 0, Id = 1, choix2, numAjo, walo, status, triPar, IdM, foundId = 0, foundIdD = 0, foundIdT = 0, comp = 0, incomp = 0;
+char cherT[33];
 // choix  === hada howa l'tikhtar luser f lawel
 // count  === hada howa l'count dyal struct
 // Id     === hada howa l'id dyal kola struct
@@ -14,8 +12,11 @@ char khawi1[33];
 // walo   === hadi bach tan3amer scanf li khawya
 // status === had dyal bach i5tar status li b4a f latach
 // triPar === hadi tikhtar bach idir tri
-// khawi  === hadi bach nbadal 3la 7sab tri par alph
-// khawi1  === hadi bach nbadal 3la 7sab tri par alph
+// IdM  === hadi bach n9aleb 3la l id bach ndir Modifier
+// foundId  === hadi natija dyal search 3la Id
+// foundIdD = hada natija f recherch dyal id
+// foundIdD = hada natija f recherch dyal titre
+// cherT[]=hada ntija f recherch dyal titre
 typedef struct
 {
     int jour;
@@ -34,17 +35,17 @@ typedef struct
 } Tache;
 
 Tache taches[50];
+Tache tmodif;
 void Menu()
 {
     printf("*************************************************************************\n");
     printf("**********   [1]--->Ajouter une or plusieurs  nouvelle tache   **********\n");
     printf("**********   [2]--->afficher tout le taches                    **********\n");
-    printf("**********   [3]--->Modifier une tâche                         **********\n");
-    printf("**********   [4]--->Modifier une tâche                         **********\n");
-    printf("**********   [5]--->Supprimer une tâche par identifiant.       **********\n");
-    printf("**********   [6]--->Supprimer une tâche par identifiant.       **********\n");
-    printf("**********   [7]--->affecher les Statistiques                  **********\n");
-    printf("**********   [8]--->click 8 pour quitter                       **********\n");
+    printf("**********   [3]--->Modifier une tache                         **********\n");
+    printf("**********   [4]--->Supprimer une tache par identifiant.       **********\n");
+    printf("**********   [5]--->Recherch  une tache.                       **********\n");
+    printf("**********   [6]--->Afficher les statiques                     **********\n");
+    printf("**********   [7]--->click 8 pour quitter                       **********\n");
     printf("*************************************************************************\n");
     printf("  Entre votre choix est doit etre entier et entre 1 et 8 !!   \n");
     scanf("%d", &choix);
@@ -56,7 +57,8 @@ void Ajouter()
     {
         printf("*****************************************************************************\n");
         printf("**************[1]--->Ajouter une nouvelle tache                **************\n");
-        printf("**************[2]--->Ajouter plusieurs nouvelles tâches        **************\n");
+        printf("**************[2]--->Ajouter plusieurs nouvelles taches        **************\n");
+        printf("**************[0]--->click pour quitter                        **************\n");
         printf("*****************************************************************************\n");
         scanf("%d", &choix2);
     } while (choix2 < 0 || choix2 > 2);
@@ -90,7 +92,7 @@ void Ajouter()
         }
         else if (status == 3)
         {
-            strcpy(taches[count].status, "finalisée");
+            strcpy(taches[count].status, "finalisee");
         }
         else
         {
@@ -153,6 +155,9 @@ void Ajouter()
             printf("***********************************************************************************************\n");
         }
     }
+    else if (choix2 == 0)
+    {
+    }
     else
     {
         printf("choix ne pas valide ");
@@ -177,18 +182,16 @@ void Afficher()
         //            taches[i].deadline.mois, taches[i].deadline.annee);
         //     printf("***********************************************************************************************************************************|\n");
         // }
-   
-   
-        do
 
+        do
         {
             printf("*******************************************************************************************\n");
             printf("*********[1]--->Trier les taches par ordre alphabetique                           *********\n");
             printf("*********[2]--->Trier les taches par deadline                                     *********\n");
-            printf("*********[3]--->Afficher les taches dont le deadline est dans 3 jours ou moins   *********.\n");
+            printf("*********[3]--->Afficher les taches dont le deadline est dans 3 jours ou moins    ********.\n");
+            printf("*********[0]--->click pour quitter                                                *********.\n");
             printf("*******************************************************************************************\n");
             scanf("%d", &triPar);
-
         } while (triPar < 0 || triPar > 3);
 
         if (triPar == 1)
@@ -199,34 +202,9 @@ void Afficher()
                 {
                     if (strcmp(taches[i].titre, taches[j].titre) > 0)
                     {
-                        // tri les tetre
-                        strcpy(khawi1, taches[i].titre);
-                        strcpy(taches[i].titre, taches[j].titre);
-                        strcpy(taches[j].titre, khawi1);
-                        // tri les description
-                        strcpy(khawi1, taches[i].description);
-                        strcpy(taches[i].description, taches[j].description);
-                        strcpy(taches[j].description, khawi1);
-
-                        strcpy(khawi1, taches[i].status);
-                        strcpy(taches[i].status, taches[j].status);
-                        strcpy(taches[j].status, khawi1);
-
-                        khawi = taches[i].id;
-                        taches[i].id = taches[j].id;
-                        taches[j].id = khawi;
-
-                        khawi = taches[i].deadline.jour;
-                        taches[i].deadline.jour = taches[j].deadline.jour;
-                        taches[j].deadline.jour = khawi;
-
-                        khawi = taches[i].deadline.mois;
-                        taches[i].deadline.mois = taches[j].deadline.mois;
-                        taches[j].deadline.mois = khawi;
-
-                        khawi = taches[i].deadline.annee;
-                        taches[i].deadline.annee = taches[j].deadline.annee;
-                        taches[j].deadline.annee = khawi;
+                        tmodif = taches[i];
+                        taches[i] = taches[j];
+                        taches[j] = tmodif;
                     }
                 }
             }
@@ -246,7 +224,7 @@ void Afficher()
                 printf("***********************************************************************************************************************************|\n");
             }
         }
-        else if (triPar = 2)
+        else if (triPar == 2)
         {
             for (int i = 0; i < count - 1; i++)
             {
@@ -257,33 +235,10 @@ void Afficher()
                         (taches[i].deadline.annee == taches[j].deadline.annee && taches[i].deadline.mois == taches[j].deadline.mois && taches[i].deadline.jour > taches[j].deadline.jour))
                     {
                         // tri les tetre
-                        strcpy(khawi1, taches[i].titre);
-                        strcpy(taches[i].titre, taches[j].titre);
-                        strcpy(taches[j].titre, khawi1);
-                        // tri les description
-                        strcpy(khawi1, taches[i].description);
-                        strcpy(taches[i].description, taches[j].description);
-                        strcpy(taches[j].description, khawi1);
 
-                        strcpy(khawi1, taches[i].status);
-                        strcpy(taches[i].status, taches[j].status);
-                        strcpy(taches[j].status, khawi1);
-
-                        khawi = taches[i].id;
-                        taches[i].id = taches[j].id;
-                        taches[j].id = khawi;
-
-                        khawi = taches[i].deadline.jour;
-                        taches[i].deadline.jour = taches[j].deadline.jour;
-                        taches[j].deadline.jour = khawi;
-
-                        khawi = taches[i].deadline.mois;
-                        taches[i].deadline.mois = taches[j].deadline.mois;
-                        taches[j].deadline.mois = khawi;
-
-                        khawi = taches[i].deadline.annee;
-                        taches[i].deadline.annee = taches[j].deadline.annee;
-                        taches[j].deadline.annee = khawi;
+                        tmodif = taches[i];
+                        taches[i] = taches[j];
+                        taches[j] = tmodif;
                     }
                 }
             }
@@ -305,7 +260,36 @@ void Afficher()
         }
         else if (triPar == 3)
         {
-            /* code */
+
+            time_t current_time;
+            struct tm *time_info;
+            char time_string[100];
+            time(&current_time);
+            time_info = localtime(&current_time);
+            int day = time_info->tm_mday;
+            int month = time_info->tm_mon + 1;
+            int year = time_info->tm_year + 1900;
+
+            // Print the current date
+            printf("Current date: %02d-%02d-%04d\n", day, month, year);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (taches[i].deadline.annee == year && taches[i].deadline.mois == month && taches[i].deadline.jour = day)
+                {
+                    printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                           taches[i].id,
+                           taches[i].titre,
+                           taches[i].description,
+                           taches[i].status, taches[i].deadline.jour,
+                           taches[i].deadline.mois, taches[i].deadline.annee);
+                    printf("***********************************************************************************************************************************|\n");
+                }
+            }
+        }
+        else if (triPar == 0)
+        {
+            // break;
         }
         else
         {
@@ -317,7 +301,258 @@ void Afficher()
         printf("\n\n************************************ne pas des taches actualement***********************************\n\n");
     }
 }
+void Modifier()
+{
+    printf("******************************************* Entre l'id pour modifier***************************************************\n");
+    scanf("%d", &IdM);
+    for (int i = 0; i < count; i++)
+    {
+        if (taches[i].id == IdM)
+        {
+            foundId = i;
+            break;
+        }
+    }
 
+    if (foundId != 0)
+    {
+        do
+        {
+            printf("********************************************************************************\n");
+            printf("**************[1]--->Modifier  la description d'une tache.        **************\n");
+            printf("**************[2]--->Modifier  le statut d'une tache.             **************\n");
+            printf("**************[3]--->Modifier  le deadline d'une tache            **************\n");
+            printf("**************[0]--->click pour quitter                           **************\n");
+            printf("********************************************************************************\n");
+            scanf("%d", &choix2);
+        } while (choix2 < 0 || choix2 > 3);
+
+        if (choix2 == 1)
+        {
+
+            printf("************************Entre  la nouvelle description ****************************************\n ");
+            scanf("%d", walo);
+            scanf("%[^\n]", &taches[foundId].description);
+            printf("***********************************************************************************************\n");
+            printf("************************************ajouter avec succes****************************************\n ");
+            printf("***********************************************************************************************\n");
+        }
+        else if (choix2 == 2)
+        {
+            do
+            {
+                printf("********************************************************************\n");
+                printf("**************[1]--->a realiser                       **************\n");
+                printf("**************[2]--->en cours de realisation          **************\n");
+                printf("**************[3]--->finalisee                        **************\n");
+                printf("********************************************************************\n");
+                scanf("%d", &status);
+            } while (status < 0 || status > 3);
+            if (status == 1)
+            {
+                strcpy(taches[foundId].status, "a realiser");
+            }
+            else if (status == 2)
+            {
+                strcpy(taches[foundId].status, "en cours de realisation");
+            }
+            else if (status == 3)
+            {
+                strcpy(taches[foundId].status, "finalisee");
+            }
+            else
+            {
+                printf("choix error repeat please");
+            }
+        }
+        else if (choix2 == 3)
+        {
+            printf("entre le deadline comme jj/mm/aa  ::  ");
+            scanf("%d/%d/%d", &taches[foundId].deadline.jour, &taches[foundId].deadline.mois, &taches[foundId].deadline.annee);
+        }
+        else if (choix2 == 0)
+        {
+            /* code */
+        }
+        else
+        {
+            printf("choix ne pas valide !!\n");
+        }
+    }
+    else
+    {
+        printf("id ne exist pas !!! \n\n");
+    }
+}
+void Supremme()
+{
+    printf("******************************************* Entre l'id pour supreme ***************************************************\n");
+    scanf("%d", &IdM);
+    for (int i = 0; i < count; i++)
+    {
+        if (taches[i].id == IdM)
+        {
+            foundId = i;
+            break;
+        }
+    }
+
+    if (foundId != 0)
+    {
+        for (int i = foundId; i < count; i++)
+        {
+            taches[i] = taches[i + 1];
+        }
+        count--;
+        Id--;
+    }
+    else
+    {
+        printf("id ne exsit pas !!!");
+    }
+}
+void recherch()
+{
+
+    do
+
+    {
+        printf("*********************************************************************************************\n");
+        printf("*********[1]--->Rechercher une tache par son Identifiant.                           *********\n");
+        printf("*********[2]--->Rechercher une tache par son Titre                                  *********\n");
+        printf("*********[0]--->click pour quitter                                                  *********\n");
+        printf("**********************************************************************************************\n");
+        scanf("%d", &triPar);
+
+    } while (triPar < 0 || triPar > 2);
+
+    if (triPar == 1)
+    {
+        printf("******************************************* Entre l'id pour Recherch ***************************************************\n");
+        scanf("%d", &IdM);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (taches[i].id == IdM)
+            {
+                foundIdD = i;
+                break;
+            }
+        }
+
+        if (foundIdD != 0)
+        {
+            printf("***********************************************************************************************************************************|\n");
+            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          |\n");
+            printf("***********************************************************************************************************************************|\n");
+
+            printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                   taches[foundIdD].id,
+                   taches[foundIdD].titre,
+                   taches[foundIdD].description,
+                   taches[foundIdD].status, taches[foundIdD].deadline.jour,
+                   taches[foundIdD].deadline.mois, taches[foundIdD].deadline.annee);
+            printf("***********************************************************************************************************************************|\n");
+        }
+        else
+        {
+            printf("id ne pas exist \n\n");
+        }
+    }
+    else if (triPar == 2)
+    {
+        printf("******************************************* Entre l'id pour Recherch ***************************************************\n");
+        scanf("%s", &cherT);
+        for (int i = 0; i < count; i++)
+        {
+            if (strcmp(taches[i].titre, cherT) == 0)
+            {
+                foundIdT = i;
+                break;
+            }
+        }
+
+        if (foundIdT != 0)
+        {
+            printf("***********************************************************************************************************************************|\n");
+            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          |\n");
+            printf("***********************************************************************************************************************************|\n");
+
+            printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                   taches[foundIdT].id,
+                   taches[foundIdT].titre,
+                   taches[foundIdT].description,
+                   taches[foundIdT].status, taches[foundIdT].deadline.jour,
+                   taches[foundIdT].deadline.mois, taches[foundIdT].deadline.annee);
+            printf("***********************************************************************************************************************************|\n");
+        }
+        else
+        {
+            printf("id ne pas exist \n\n");
+        }
+    }
+    else if (triPar == 0)
+    {
+    }
+    else
+    {
+        /* code */
+    }
+}
+void Statics()
+{
+    do
+
+    {
+        printf("******************************************************************************************************\n");
+        printf("*********[1]--->Afficher le nombre total des tâches.                                         *********\n");
+        printf("*********[2]--->Afficher le nombre de tâches complètes et incomplètes.                       *********\n");
+        printf("*********[3]--->Afficher le nombre de jours restants jusqu'au dlai de chaque tâche.         *********\n");
+        printf("*********[0]--->click pour quitter                                                           *********\n");
+        printf("******************************************************************************************************\n");
+        scanf("%d", &triPar);
+
+    } while (triPar < 0 || triPar > 3);
+    if (count > 0)
+    {
+        if (triPar == 1)
+        {
+            printf("******************************************************************************************************\n\n");
+            printf("                         le nombre des taches  est  ====   %d\n\n ", count);
+            printf("******************************************************************************************************\n\n");
+        }
+        else if (triPar == 2)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (strcmp(taches[i].status, "finalisee") == 0)
+                {
+                    comp++;
+                }
+                else
+                {
+                    incomp++;
+                }
+            }
+            printf("complet    =====    %d\n ", comp);
+            printf("incomplet  =====    %d\n ", incomp);
+        }
+        else if (triPar == 3)
+        {
+        }
+        else if (triPar == 0)
+        {
+        }
+        else
+        {
+            printf("ne pas valid !!\n\n");
+        }
+    }
+    else
+    {
+        printf("\n  ne taches a le moment !! \n\n ");
+    }
+}
 int main()
 {
     do
@@ -332,17 +567,26 @@ int main()
             Afficher();
             break;
         case 3:
-            Ajouter();
+            Modifier();
             break;
         case 4:
-            Ajouter();
+            Supremme();
+            break;
+        case 5:
+            recherch();
+            break;
+        case 6:
+            Statics();
+            break;
+        case 7:
+            printf("au revoir \n \n \n ");
             break;
         default:
             printf("choix ne pas valide \n ");
             break;
         }
 
-    } while (1);
+    } while (choix != 7);
 
     return 0;
 }
