@@ -5,6 +5,14 @@
 int choix, count = 0, Id = 1, choix2, numTacheAjouter, status, idMoSu, foundId = 0, foundIdD = 0, foundIdT = 0, comp = 0, incomp = 0, localtime1, localtime2, resultt;
 ;
 char cherT[33];
+FILE *fptr;
+// typedef struct
+// {
+//     int jour;
+//     int mois;
+//     int annee;
+
+// } Collaborateur;
 typedef struct
 {
     int jour;
@@ -20,10 +28,15 @@ typedef struct
     char description[70];
     Deadline deadline;
     char status[20];
+    int create_atJour;
+    int create_atMois;
+    int create_atAnnee;
 } Tache;
 
 Tache taches[50];
 Tache tmodif;
+// Collaborateur collaborateurs[50];
+
 void Menu()
 {
     printf("*************************************************************************\n");
@@ -33,13 +46,24 @@ void Menu()
     printf("**********   [4]--->Supprimer une tache par identifiant.       ********\n");
     printf("**********   [5]--->Recherch  une tache.                       ********\n");
     printf("**********   [6]--->Afficher les statiques                     ********\n");
-    printf("**********   [7]--->click 8 pour quitter                       ********\n");
+    printf("**********   [7]--->Enregistrer dans fichier                   ********\n");
+    printf("**********   [8]--->click 8 pour quitter                       ********\n");
     printf("*************************************************************************\n");
     printf("  Entre votre choix est doit etre entier et entre 1 et 8 !!   \n");
     resultt = scanf("%d", &choix);
 }
 void Ajouter()
 {
+
+    time_t current_time;
+    struct tm *time_info;
+    char time_string[100];
+    time(&current_time);
+    time_info = localtime(&current_time);
+    int day = time_info->tm_mday;
+    int month = time_info->tm_mon + 1;
+    int year = time_info->tm_year + 1900;
+    // localtime1 = year * 365 + month * 30 + day;
     do
 
     {
@@ -96,7 +120,9 @@ void Ajouter()
             }
 
         } while (taches[count].deadline.jour < 0 || taches[count].deadline.jour > 31 || taches[count].deadline.mois < 0 || taches[count].deadline.mois > 12 || taches[count].deadline.annee < 2000 || taches[count].deadline.annee > 2030);
-
+        taches[count].create_atJour = day;
+        taches[count].create_atMois = month;
+        taches[count].create_atAnnee = year;
         Id++;
         count++;
         printf("***********************************************************************************************\n");
@@ -149,7 +175,9 @@ void Ajouter()
                     printf("      la date ne pas valide   \n");
                 }
             } while (taches[count].deadline.jour < 0 || taches[count].deadline.jour > 31 || taches[count].deadline.mois < 0 || taches[count].deadline.mois > 12 || taches[count].deadline.annee < 2000 || taches[count].deadline.annee > 2030);
-            printf("*****************************************************************************************************************************\n");
+            taches[count].create_atJour = day;
+            taches[count].create_atMois = month;
+            taches[count].create_atAnnee = year;
             Id++;
             count++;
             printf("***********************************************************************************************\n");
@@ -183,11 +211,18 @@ void Afficher()
 
         if (choix2 == 1)
         {
+            char cmp1[50], cmp2[50];
             for (int i = 0; i < count - 1; i++)
             {
                 for (int j = i + 1; j < count; j++)
                 {
-                    if (strcmp(taches[i].titre, taches[j].titre) > 0)
+                    // strcpy(cmp1,);
+                    // cmp1=strlwr(taches[i].titre);
+                    strcpy(cmp1, taches[i].titre);
+                    strcpy(cmp2, taches[j].titre);
+                    strlwr(cmp1);
+                    strlwr(cmp2);
+                    if (strcmp(cmp1, cmp2) > 0)
                     {
                         tmodif = taches[i];
                         taches[i] = taches[j];
@@ -195,19 +230,19 @@ void Afficher()
                     }
                 }
             }
-            printf("***********************************************************************************************************************************|\n");
-            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          |\n");
-            printf("***********************************************************************************************************************************|\n");
+            printf("***************************************************************************************************************************************************|\n");
+            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          | create_at    | \n");
+            printf("***************************************************************************************************************************************************|\n");
             for (int i = 0; i < count; i++)
             {
 
                 // printf("***********************************************************************************************************************************|\n");
-                printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |   %d/%d/%d  |\n",
                        taches[i].id,
                        taches[i].titre,
                        taches[i].description,
                        taches[i].status, taches[i].deadline.jour,
-                       taches[i].deadline.mois, taches[i].deadline.annee);
+                       taches[i].deadline.mois, taches[i].deadline.annee, taches[i].create_atJour, taches[i].create_atMois, taches[i].create_atAnnee);
                 printf("***********************************************************************************************************************************|\n");
             }
         }
@@ -229,19 +264,19 @@ void Afficher()
                     }
                 }
             }
-            printf("***********************************************************************************************************************************|\n");
-            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          |\n");
-            printf("***********************************************************************************************************************************|\n");
+            printf("***************************************************************************************************************************************************|\n");
+            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          | create_at    | \n");
+            printf("***************************************************************************************************************************************************|\n");
             for (int i = 0; i < count; i++)
             {
 
                 // printf("***********************************************************************************************************************************|\n");
-                printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |  %d/%d/%d  |\n",
                        taches[i].id,
                        taches[i].titre,
                        taches[i].description,
                        taches[i].status, taches[i].deadline.jour,
-                       taches[i].deadline.mois, taches[i].deadline.annee);
+                       taches[i].deadline.mois, taches[i].deadline.annee, taches[i].create_atJour, taches[i].create_atMois, taches[i].create_atAnnee);
                 printf("***********************************************************************************************************************************|\n");
             }
         }
@@ -260,9 +295,9 @@ void Afficher()
 
             // Print the current date
             // printf("Current date: %02d-%02d-%04d\n", day, month, year);
-            printf("***********************************************************************************************************************************|\n");
-            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          |\n");
-            printf("***********************************************************************************************************************************|\n");
+            printf("***************************************************************************************************************************************************|\n");
+            printf("|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          | create_at    | \n");
+            printf("***************************************************************************************************************************************************|\n");
             for (int i = 0; i < count; i++)
             {
                 // if ((taches[i].deadline.annee == year && taches[i].deadline.mois == month) && (taches[i].deadline.jour == day || taches[i].deadline.jour == day + 1 || taches[i].deadline.jour == day + 2))
@@ -278,12 +313,12 @@ void Afficher()
                 localtime2 = taches[i].deadline.annee * 365 + taches[i].deadline.mois * 30 + taches[i].deadline.jour;
                 if (localtime2 == localtime1 || localtime2 == localtime1 + 1 || localtime2 == localtime1 + 2 || localtime2 == localtime1 + 3)
                 {
-                    printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                    printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |   %d/%d/%d    |\n",
                            taches[i].id,
                            taches[i].titre,
                            taches[i].description,
                            taches[i].status, taches[i].deadline.jour,
-                           taches[i].deadline.mois, taches[i].deadline.annee);
+                           taches[i].deadline.mois, taches[i].deadline.annee, taches[i].create_atJour, taches[i].create_atMois, taches[i].create_atAnnee);
                     printf("***********************************************************************************************************************************|\n");
                 }
             }
@@ -417,7 +452,7 @@ void Supremme()
         printf("id ne exsit pas !!!\n");
     }
 }
-void recherch()
+void Recherch()
 {
 
     do
@@ -597,6 +632,41 @@ void Statics()
         printf("\n  ne taches a le moment !! \n\n ");
     }
 }
+void Enregistrer()
+{
+    fptr = fopen("file.txt", "w");
+    // fprintf(fptr, "Some text");
+    fprintf(fptr, "***************************************************************************************************************************************************|\n");
+    fprintf(fptr, "|     ID     |           TITRE          |              DESCRIPTION            |           STATUS         |           DATE          |  create_at    | \n");
+    fprintf(fptr, "***************************************************************************************************************************************************|\n");
+    for (int i = 0; i < count; i++)
+    {
+        fprintf(fptr, "|      ");
+        fprintf(fptr, "%d", taches[i].id);
+        fprintf(fptr, "     |      ");
+        fprintf(fptr, "%s", taches[i].titre);
+        fprintf(fptr, "      |       ");
+        fprintf(fptr, "%s", taches[i].description);
+        fprintf(fptr, "      |      ");
+        fprintf(fptr, "%s", taches[i].status);
+        fprintf(fptr, "     |      ");
+        fprintf(fptr, "%d", taches[i].deadline.jour);
+        fprintf(fptr, "/");
+        fprintf(fptr, "%d", taches[i].deadline.mois);
+        fprintf(fptr, "/");
+        fprintf(fptr, "%d", taches[i].deadline.annee);
+        fprintf(fptr, "      |      ");
+        fprintf(fptr, "%d", taches[i].create_atJour);
+        fprintf(fptr, "/");
+        fprintf(fptr, "%d", taches[i].create_atMois);
+        fprintf(fptr, "/");
+        fprintf(fptr, "%d", taches[i].create_atAnnee);
+        fprintf(fptr, "      |");
+        fprintf(fptr, "\n");
+        fprintf(fptr, "***************************************************************************************************************************************************|\n");
+    }
+    fclose(fptr);
+}
 
 int main()
 {
@@ -618,12 +688,15 @@ int main()
             Supremme();
             break;
         case 5:
-            recherch();
+            Recherch();
             break;
         case 6:
             Statics();
             break;
         case 7:
+            Enregistrer();
+            break;
+        case 8:
             printf("au revoir \n \n \n ");
             break;
         default:
@@ -635,7 +708,7 @@ int main()
             // printf("\n");
             break;
         }
-    } while (choix != 7);
+    } while (choix != 8);
 
     return 0;
 }
