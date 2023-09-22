@@ -86,8 +86,17 @@ void Ajouter()
         {
             printf("choix error repeat please");
         }
-        printf("entre le deadline comme jj/mm/aa  ::  ");
-        scanf("%d/%d/%d", &taches[count].deadline.jour, &taches[count].deadline.mois, &taches[count].deadline.annee);
+        do
+        {
+            printf("entre le deadline comme jj/mm/aa  ::  ");
+            scanf("%d/%d/%d", &taches[count].deadline.jour, &taches[count].deadline.mois, &taches[count].deadline.annee);
+            if (taches[count].deadline.jour < 0 || taches[count].deadline.jour > 31 || taches[count].deadline.mois < 0 || taches[count].deadline.mois > 12 || taches[count].deadline.annee < 2000 || taches[count].deadline.annee > 2030)
+            {
+                printf("      la date ne pas valide   \n");
+            }
+
+        } while (taches[count].deadline.jour < 0 || taches[count].deadline.jour > 31 || taches[count].deadline.mois < 0 || taches[count].deadline.mois > 12 || taches[count].deadline.annee < 2000 || taches[count].deadline.annee > 2030);
+
         Id++;
         count++;
         printf("***********************************************************************************************\n");
@@ -131,8 +140,15 @@ void Ajouter()
                 printf("choix error repeat please \n");
             }
 
-            printf("entre le deadline comme jj/mm/aa  ::  ");
-            scanf("%d/%d/%d", &taches[count].deadline.jour, &taches[count].deadline.mois, &taches[count].deadline.annee);
+            do
+            {
+                printf("entre le deadline comme jj/mm/aa  ::  ");
+                scanf("%d/%d/%d", &taches[count].deadline.jour, &taches[count].deadline.mois, &taches[count].deadline.annee);
+                if (taches[count].deadline.jour < 0 || taches[count].deadline.jour > 31 || taches[count].deadline.mois < 0 || taches[count].deadline.mois > 12 || taches[count].deadline.annee < 2000 || taches[count].deadline.annee > 2030)
+                {
+                    printf("      la date ne pas valide   \n");
+                }
+            } while (taches[count].deadline.jour < 0 || taches[count].deadline.jour > 31 || taches[count].deadline.mois < 0 || taches[count].deadline.mois > 12 || taches[count].deadline.annee < 2000 || taches[count].deadline.annee > 2030);
             printf("*****************************************************************************************************************************\n");
             Id++;
             count++;
@@ -240,6 +256,7 @@ void Afficher()
             int day = time_info->tm_mday;
             int month = time_info->tm_mon + 1;
             int year = time_info->tm_year + 1900;
+            localtime1 = year * 365 + month * 30 + day;
 
             // Print the current date
             // printf("Current date: %02d-%02d-%04d\n", day, month, year);
@@ -248,7 +265,18 @@ void Afficher()
             printf("***********************************************************************************************************************************|\n");
             for (int i = 0; i < count; i++)
             {
-                if ((taches[i].deadline.annee == year && taches[i].deadline.mois == month) && (taches[i].deadline.jour == day || taches[i].deadline.jour == day + 1 || taches[i].deadline.jour == day + 2))
+                // if ((taches[i].deadline.annee == year && taches[i].deadline.mois == month) && (taches[i].deadline.jour == day || taches[i].deadline.jour == day + 1 || taches[i].deadline.jour == day + 2))
+                // {
+                //     printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
+                //            taches[i].id,
+                //            taches[i].titre,
+                //            taches[i].description,
+                //            taches[i].status, taches[i].deadline.jour,
+                //            taches[i].deadline.mois, taches[i].deadline.annee);
+                //     printf("***********************************************************************************************************************************|\n");
+                // }
+                localtime2 = taches[i].deadline.annee * 365 + taches[i].deadline.mois * 30 + taches[i].deadline.jour;
+                if (localtime2 == localtime1 || localtime2 == localtime1 + 1 || localtime2 == localtime1 + 2 || localtime2 == localtime1 + 3)
                 {
                     printf("|     %d     |            %s            |      %s     |           %s          |       %02d/%02d/%04d      |\n",
                            taches[i].id,
@@ -532,10 +560,28 @@ void Statics()
             localtime1 = year * 365 + month * 30 + day;
             for (int i = 0; i < count; i++)
             {
+                // printf("******************************************************************************************************\n\n");
+                // printf("           la tache numero %d il rest     ======     %d             jour            \n \n ", taches[i].id, localtime2 - localtime1);
+                // printf("******************************************************************************************************\n\n");
                 localtime2 = taches[i].deadline.annee * 365 + taches[i].deadline.mois * 30 + taches[i].deadline.jour;
-                printf("******************************************************************************************************\n\n");
-                printf("           la tache numero %d il rest     ======     %d             jour            \n \n ", taches[i].id, localtime2 - localtime1);
-                printf("******************************************************************************************************\n\n");
+                if (localtime2 - localtime1 < 0)
+                {
+                    printf("******************************************************************************************************\n\n");
+                    printf("           la tache numero %d il termini a     ======     %d             jour            \n \n ", taches[i].id, localtime1 - localtime2);
+                    printf("******************************************************************************************************\n\n");
+                }
+                else if (localtime2 - localtime1 > 0)
+                {
+                    printf("******************************************************************************************************\n\n");
+                    printf("           la tache numero %d il rest     ======     %d             jour            \n \n ", taches[i].id, localtime2 - localtime1);
+                    printf("******************************************************************************************************\n\n");
+                }
+                else
+                {
+                    printf("******************************************************************************************************\n\n");
+                    printf("           la tache numero %d il rest     ======     termini ce  jour            \n \n ", taches[i].id);
+                    printf("******************************************************************************************************\n\n");
+                }
             }
         }
         else if (choix2 == 0)
@@ -551,8 +597,6 @@ void Statics()
         printf("\n  ne taches a le moment !! \n\n ");
     }
 }
-
-
 
 int main()
 {
